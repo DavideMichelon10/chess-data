@@ -1,0 +1,12 @@
+# Escludere l'ambiente virtuale Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Escludere file di Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+.terraform.lock.hcl
