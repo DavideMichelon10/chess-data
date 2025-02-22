@@ -15,11 +15,3 @@
 ✅ Display recent game statistics (rating, best rating, etc.)  
 ✅ Responsive design with **TailwindCSS**  
 ✅ Data pipeline updates in the background using **Google Cloud Services**  
-
----
-
-## 🏗 Installation & Setup
-### **1️⃣ Clone the repository**
-```sh
-git clone https://github.com/your-username/chess-stats-tracker.git
-cd chess-stats-tracker
