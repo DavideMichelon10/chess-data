@@ -1,5 +1,6 @@
 # Escludere l'ambiente virtuale Python
 venv/
+env311/
 __pycache__/
 *.pyc
 *.pyo
