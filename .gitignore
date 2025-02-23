@@ -11,3 +11,5 @@ terraform.tfstate
 terraform.tfstate.backup
 *.tfvars
 .terraform.lock.hcl
+backend/bq_credentials.json
+.env
