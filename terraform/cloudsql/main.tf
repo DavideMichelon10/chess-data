@@ -6,7 +6,7 @@ resource "google_sql_database" "new_database" {
 resource "google_sql_user" "mysql_user" {
   name     = "chess_admin"
   instance = google_sql_database_instance.mysql.name
-  password = ""
+  password = "StrongPassword123!"
   host     = "%"
 }
 
