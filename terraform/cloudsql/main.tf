@@ -11,7 +11,7 @@ resource "google_sql_user" "mysql_user" {
 }
 
 resource "google_sql_database_instance" "mysql" {
-  name             = "enterprise-main-instance"
+  name             = "instance"
   database_version = "MYSQL_8_0_31"
   settings {
     tier    = "db-n1-standard-1"
