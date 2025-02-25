@@ -1,0 +1,62 @@
+/* Contenitore della sezione */
+.user-card-container {
+    background-color: #181818;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    margin: 0 auto;
+  }
+  
+  /* Titolo della sezione */
+  .section-title {
+    font-size: 16px;
+    color: #b3b3b3;
+    margin-bottom: 15px;
+  }
+  
+  /* Lista utenti */
+  .user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Stile della card utente */
+  .user-card {
+    display: flex;
+    align-items: center;
+    background: #202020;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  
+  .user-card:hover {
+    background: #2a2a2a;
+  }
+  
+  /* Avatar */
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  
+  /* Info utente */
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .user-handle {
+    font-size: 14px;
+    color: #b3b3b3;
+  }

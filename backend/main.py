@@ -6,9 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # 🔹 Permette solo il frontend React
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
-    allow_methods=["GET", "POST"],  # 🔹 (Opzionale) Limita i metodi permessi
+    allow_methods=["GET", "POST"],
     allow_headers=["Authorization", "Content-Type"],  
 )
 @app.get("/search/")
