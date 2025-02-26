@@ -33,9 +33,7 @@
     cursor: pointer;
   }
   
-  .user-card:hover {
-    background: #2a2a2a;
-  }
+
   
   /* Avatar */
   .user-avatar {
@@ -60,3 +58,35 @@
     font-size: 14px;
     color: #b3b3b3;
   }
+
+   /* Stile generale della card */
+.user-card {
+  display: flex;
+  align-items: center;
+  background: #202020;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.user-card:hover {
+  background: #2a2a2a;
+}
+
+
+.user-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Badge titolo (GM, IM, FM) */
+.title-badge {
+  background: #8B0000; /* Rosso scuro */
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}

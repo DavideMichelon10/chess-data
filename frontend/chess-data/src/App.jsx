@@ -1,4 +1,4 @@
-import Entry from './components/Entry';
+import EntryList from './components/EntryList';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import SearchBar from "./components/SearchBar";
@@ -9,7 +9,7 @@ export default function App(){
     <>
       <Header/>
       <SearchBar/>
-      <Entry/>
+      <EntryList/>
       <Footer/>
     </>
   )

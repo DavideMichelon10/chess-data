@@ -3,7 +3,10 @@ import "./SearchBar.css"; // Assicurati che il CSS sia importato
 
 export default function SearchBar () {
   const [query, setQuery] = useState("");
-
+  
+  function handleClick(){
+    console.log("Click")
+  }
   return (
     <div className="search-section">
       {/* Titolo */}
@@ -18,10 +21,12 @@ export default function SearchBar () {
           autoComplete="off" 
           type="text"
         />
-        <button className="vs-button primary-red md square_button round">
+        <button onClick={handleClick} className="vs-button primary-red md square_button round">
           🔍
         </button>
       </form>
     </div>
   );
+
+  
 };
