@@ -1,6 +1,22 @@
+/* Assicura che il contenitore principale occupi tutta la viewport */
+#root, body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-container {
+  flex: 1; /* Fa sì che il contenuto occupi tutto lo spazio disponibile */
+  display: flex;
+  flex-direction: column;
+}
+
 .footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #181818;
-    color: white;
-  }
+  background-color: #121212;
+  color: #bbb;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+  width: 100%;
+}
