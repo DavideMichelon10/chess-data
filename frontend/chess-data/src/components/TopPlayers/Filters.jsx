@@ -4,7 +4,7 @@ import "./Filters.css";
 export default function Filters({ setFilter }) {
   return (
     <div className="filters">
-      {/* Sezione per Modalità di Gioco */}
+
       <div className="filter-category elevated rounded">
         <h4>By Game Mode</h4>
         <button onClick={() => setFilter("blitz")}>Blitz</button>
@@ -13,7 +13,6 @@ export default function Filters({ setFilter }) {
         <button onClick={() => setFilter("daily")}>Daily</button>
       </div>
       
-      {/* Sezione per Titolo */}
       <div className="filter-category elevated rounded">
         <h4>By Title</h4>
         <button onClick={() => setFilter("GM")}>Grandmaster (GM)</button>
