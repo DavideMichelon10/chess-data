@@ -1,5 +1,11 @@
+
 .top-players-container {
     display: flex;
     height: 100vh;
     color: white;
+  }
+  .selected {
+    background-color: #4caf50; /* Verde */
+    color: white;
+    font-weight: bold;
   }

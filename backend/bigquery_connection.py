@@ -20,10 +20,26 @@ class BigQueryConnection():
                 project = self.credentials.project_id,
             )
         
-    def execute_query(self, sql):
+    def execute_query(self, sql, params=None):
         try:
-            query_job = self.connection.query(sql)
-            results = query_job.result()  # Esegue la query
+            query_parameters = []
+            if params:
+                for key, value in params.items():
+                    if isinstance(value, int):
+                        query_parameters.append(bigquery.ScalarQueryParameter(key, "INT64", value))
+                    elif isinstance(value, float):
+                        query_parameters.append(bigquery.ScalarQueryParameter(key, "FLOAT64", value))
+                    elif isinstance(value, bool):
+                        query_parameters.append(bigquery.ScalarQueryParameter(key, "BOOL", value))
+                    else:
+                        query_parameters.append(bigquery.ScalarQueryParameter(key, "STRING", value))
+            
+            job_config = bigquery.QueryJobConfig(query_parameters=query_parameters)
+            
+            print(f"query: {sql}")
+            print(f"job_config: {job_config}")
+            query_job = self.connection.query(sql, job_config=job_config)
+            results = query_job.result()
             
             if results.total_rows is None or results.total_rows == 0:
                 return []
@@ -31,9 +47,8 @@ class BigQueryConnection():
             return [dict(row) for row in results]
         
         except Exception as e:
-            print(f"Errore durante l'esecuzione della query: {sql}")
+            print(f"Errore durante l'esecuzione della query: {sql}, con parametri: {params}")
             raise e
-
     def _create_schema(self, schema: list):
         result = []
         for element in schema:
