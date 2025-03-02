@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException, Query
-from bigquery_connection import BigQueryConnection
 from fastapi.middleware.cors import CORSMiddleware
+
+# Importa la nuova classe di connessione
+from firestore_connection import FirestoreConnection
 
 app = FastAPI()
 
@@ -12,60 +14,48 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],  
 )
 
-def fetch_query_results(query: str, params: dict = None):
-    """
-    Funzione generica per eseguire query su BigQuery
-    """
-    try:
-        print(f"fetchimg...")
-        results = BigQueryConnection().execute_query(query, params)
-        print(f"get data: {results}")
-        return results
-    except Exception as e:
-        print(f"excetion: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/search/")
-def search_player(player_name: str = Query(..., title="Nome del giocatore")):
-    query = """
-        WITH ranked_data AS (
-            SELECT 
-                player_name,
-                game_type,
-                last_rating,
-                best_rating,
-                timestamp,
-                ROW_NUMBER() OVER (PARTITION BY player_name, game_type ORDER BY timestamp DESC) AS rank
-            FROM `chess-data-451709.chess_data.chess_stats`
-            WHERE player_name = @player_name
-        )
-        SELECT player_name, game_type, last_rating, best_rating
-        FROM ranked_data
-        WHERE rank = 1;
-    """
-    params = {"player_name": player_name}
-    results = fetch_query_results(query, params)
-
-    if not results:
-        return {"message": "Nessun risultato trovato per questo giocatore"}
-
-    return {"player_name": player_name, "stats": results}
+# Inizializza una sola volta la connessione Firestore (opzionale ma consigliato)
+firestore_conn = FirestoreConnection()
 
 @app.get("/top-players/")
 def get_top_players(game_type: str, limit: int = 10):
-    print(f"DEBUG: game_type={game_type}")
-    query = """
-        SELECT player_name, game_type, MAX(best_rating) AS best_rating
-        FROM `chess-data-451709.chess_data.chess_stats`
-        WHERE game_type = @game_type
-        GROUP BY player_name, game_type
-        ORDER BY best_rating DESC
-        LIMIT 100;
     """
-    params = {"game_type": game_type, "limit": limit}
-    results = fetch_query_results(query, params)
+    Esegue una query su Firestore e ritorna i giocatori con best_rating più alto
+    in base al game_type indicato (es. 'chess_blitz', 'chess_bullet', 'chess_rapid').
+    """
+    results = firestore_conn.get_top_players(game_type, limit)
 
     if not results:
         return {"message": "Nessun risultato trovato per questo game_type"}
-    print(f"res: {results}")
-    return {"game_type": game_type, "top_players": results}
+    
+    return {
+        "game_type": game_type,
+        "top_players": results
+    }
+    
+@app.get("/search/")
+def search_player(player_name: str = Query(..., title="Nome del giocatore")):
+    """
+    Recupera i dati di un singolo giocatore da Firestore.
+    Lo username del giocatore coincide con l'ID del documento nella collection chesscom_users.
+    """
+    data = firestore_conn.get_user_data(player_name)
+    if not data:
+        return {"message": "Nessun risultato trovato per questo giocatore"}
+
+    # Ricostruiamo un formato di risposta simile a quello di BigQuery,
+    # ossia un array di "righe" per ogni game_type (chess_blitz, chess_bullet, chess_rapid).
+    results = []
+    for game_type in ["chess_blitz", "chess_bullet", "chess_rapid"]:
+        if game_type in data:
+            results.append({
+                "player_name": player_name,
+                "game_type": game_type,
+                "last_rating": data[game_type].get("last_rating", None),
+                "best_rating": data[game_type].get("best_rating", None),
+            })
+    
+    return {
+        "player_name": player_name,
+        "stats": results
+    }

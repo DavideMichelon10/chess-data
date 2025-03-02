@@ -12,4 +12,5 @@ terraform.tfstate.backup
 *.tfvars
 .terraform.lock.hcl
 backend/bq_credentials.json
+backend/firestore_credentials.json
 .env

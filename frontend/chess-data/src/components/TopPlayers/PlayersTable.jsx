@@ -17,14 +17,23 @@ export default function PlayersTable({ players }) {
             <tr key={index} className="border-b border-gray-700 hover:bg-gray-800 transition">
               <td className="px-6 py-4 text-gray-400">{index + 1}</td>
               <td className="px-6 py-4 flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-lg font-semibold">
-                  {player.player_name.charAt(0)}
-                </div>
+                {/* Se avatar_url esiste, mostra l’immagine */}
+                {player.avatar_url ? (
+                  <img
+                    src={player.avatar_url}
+                    className="w-10 h-10 rounded-full"
+                    alt={`${player.player_name} avatar`}
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-lg font-semibold">
+                    {player.player_name.charAt(0)}
+                  </div>
+                )}
                 <span className="font-semibold">{player.player_name}</span>
               </td>
               <td className="px-6 py-4">{player.game_type}</td>
               <td className="px-6 py-4 text-right text-green-400 font-bold">
-                {player.best_rating.toLocaleString()}
+                {player.best_rating?.toLocaleString()}
               </td>
             </tr>
           ))}

@@ -16,7 +16,7 @@ def copy_firestore_to_bigquery():
     try:
         logger.log_text("Avvio della copia Firestore → BigQuery", severity="INFO")
 
-        collection_ref = db.collection("users")
+        collection_ref = db.collection("chesscom_users")
         docs = collection_ref.stream()
 
         rows_to_insert = []
