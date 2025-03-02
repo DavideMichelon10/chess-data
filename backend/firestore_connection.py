@@ -23,32 +23,37 @@ class FirestoreConnection:
             return doc.to_dict()
         return None
 
-    def get_top_players(self, game_type: str, limit: int = 10):
+    def get_top_players(self, game_type: str, category: str = None, limit: int = 100):
         """
-        Esegue una query su Firestore e ritorna i top player 
-        (ordinati per best_rating decrescente) per un certo game_type.
+        Esegue una query su Firestore e ritorna i top player (ordinati per actual_rating 
+        decrescente) per un certo game_type, filtrando eventualmente anche su category.
         """
-        docs = (
-            self.db.collection("chesscom_users")
-            .order_by(f"{game_type}.best_rating", direction=firestore.Query.DESCENDING)
-            .limit(limit)
-            .stream()
-        )
+        # Costruisci la query di base
+        query = self.db.collection("chesscom_users")
+
+        if category:
+            query = query.where("category", "==", category)
+
+        query = query.order_by(f"{game_type}.last_rating", direction=firestore.Query.DESCENDING)
+
+        docs = query.limit(limit).stream()
         
         results = []
         for doc in docs:
             data = doc.to_dict()
+
             if game_type in data:
-                # Se esiste un campo "avatar_storage_url", convertiamolo da gs:// a https://
                 avatar_gs_url = data.get("avatar_storage_url")
                 avatar_url = None
                 if avatar_gs_url:
                     avatar_url = avatar_gs_url.replace("gs://", "https://storage.googleapis.com/")
-                
                 results.append({
-                    "player_name": doc.id,
-                    "game_type": game_type,
-                    "best_rating": data[game_type].get("best_rating", None),
+                    "username": doc.id,
+                    "last_rating": data[game_type].get("last_rating", None),
+                    "name": data.get("name", None),
+                    "win": data[game_type].get("win", None),
+                    "loss": data[game_type].get("loss", None),
+                    "draw": data[game_type].get("draw", None),
                     "avatar_url": avatar_url
                 })
         return results

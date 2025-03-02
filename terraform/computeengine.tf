@@ -162,7 +162,7 @@ resource "google_compute_instance" "chess_vm" {
   sync
 
   # Spegni la VM dopo l'esecuzione
-  # shutdown -h now
+  shutdown -h now
   EOT
 
   lifecycle {

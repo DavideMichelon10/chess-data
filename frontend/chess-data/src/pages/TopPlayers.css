@@ -1,11 +1,202 @@
+/* ==============================
+   LAYOUT PRINCIPALE
+================================ */
+.toplist-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 24px;
+}
+@media (min-width: 992px) {
+  .toplist-container {
+    flex-direction: row;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+}
 
-.top-players-container {
-    display: flex;
-    height: 100vh;
-    color: white;
+/* ==============================
+   SIDEBAR
+================================ */
+.tp-sidebar {
+  width: 100%;
+}
+@media (min-width: 992px) {
+  .tp-sidebar {
+    width: 300px;
   }
-  .selected {
-    background-color: #4caf50; /* Verde */
-    color: white;
-    font-weight: bold;
+}
+
+.tp-sidebar-container {
+  background-color: #181818; /* sfondo scuro del contenitore */
+  border-radius: 8px;
+  padding: 0;               /* Rimuoviamo il padding di default */
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  overflow: hidden;         /* Per evitare che l’header sporga dai bordi stondati */
+}
+
+.tp-sidebar-header {
+  background-color: #222;   /* colore un po’ più chiaro o scuro a scelta */
+  padding: 12px 16px;
+  color: #fff;
+  font-weight: bold;
+  /* Se vuoi arrotondare gli angoli superiori */
+  /* border-radius: 8px 8px 0 0; (se preferisci) */
+}
+
+
+.tp-sidebar-header--lg {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.tp-sidebar-item {
+  display: block;
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  color: #aaa;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.tp-sidebar-item:hover {
+  background-color: #2a2a2a;
+  color: #ddd;
+}
+.tp-sidebar-item--active {
+  background-color: #3a3a3a;
+  color: #fff;
+}
+
+/* ==============================
+   TABELLA / VIEWSTATS
+================================ */
+.viewstats-table {
+  flex: 1;
+  background-color: #1c1c1c;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* Header tabella */
+.vs-header {
+  background-color: #222;
+  border-radius: 8px 8px 0 0;
+  padding: 12px 0;
+  margin-bottom: 4px;
+}
+
+/* Righe della tabella */
+.vs-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 0;
+}
+
+/* Righe nel corpo: border e hover */
+.vs-content .vs-row {
+  border-bottom: 1px solid #2a2a2a;
+}
+.vs-content .vs-row:hover {
+  background-color: #202020;
+}
+
+/* Righe di players con altezza fissa */
+.vs-row.vs-player-row {
+  height: 72px;
+  /* Non serve ridichiarare display: flex o align-items, 
+     sono già definiti su .vs-row */
+}
+
+/* Celle di default */
+.vs-item {
+  flex: 1;
+  color: #ccc;
+  font-size: 1.2rem;
+}
+.vs-item.font-medium {
+  font-weight: 500;
+}
+.vs-item--green {
+  color: #00cc66; 
+}
+.text-right {
+  text-align: right;
+}
+
+/* Colonne particolari */
+.vs-rank {
+  flex: 0 0 60px;
+  text-align: center;
+  font-weight: 600;
+}
+.vs-rating {
+  flex: 0 0 80px;
+  text-align: center;
+}
+.vs-win,
+.vs-loss,
+.vs-draw {
+  flex: 0 0 110px;
+  text-align: center;
+}
+
+/* Avatar & info utente */
+.vs-channel-wrapper {
+  display: flex;
+  align-items: center;
+}
+.vs-channel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Avatar e placeholder rotondi */
+.vs-channel-image,
+.vs-channel-placeholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+.vs-channel-placeholder {
+  background-color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #ddd;
+}
+
+/* Nome e username */
+.vs-channel-name {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #fff;
+  line-height: 1.2;
+}
+.vs-channel-id {
+  font-size: 0.95rem;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+/* ==============================
+   RESPONSIVE UTILITY
+================================ */
+.hide-on-mobile-lg {
+  display: none;
+}
+@media (min-width: 768px) {
+  .hide-on-mobile-lg {
+    display: block;
   }
+}

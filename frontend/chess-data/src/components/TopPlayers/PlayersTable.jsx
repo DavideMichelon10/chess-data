@@ -1,44 +1,54 @@
+// PlayersTable.jsx
 import React from "react";
 
 export default function PlayersTable({ players }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full border-collapse bg-gray-900 text-white rounded-lg shadow-lg">
-        <thead>
-          <tr className="bg-gray-800 text-gray-300 text-left">
-            <th className="px-6 py-3 text-sm font-medium">Rank</th>
-            <th className="px-6 py-3 text-sm font-medium">Player</th>
-            <th className="px-6 py-3 text-sm font-medium">Game Type</th>
-            <th className="px-6 py-3 text-sm font-medium text-right">Best Rating</th>
-          </tr>
-        </thead>
-        <tbody>
-          {players.map((player, index) => (
-            <tr key={index} className="border-b border-gray-700 hover:bg-gray-800 transition">
-              <td className="px-6 py-4 text-gray-400">{index + 1}</td>
-              <td className="px-6 py-4 flex items-center space-x-3">
-                {/* Se avatar_url esiste, mostra l’immagine */}
-                {player.avatar_url ? (
-                  <img
-                    src={player.avatar_url}
-                    className="w-10 h-10 rounded-full"
-                    alt={`${player.player_name} avatar`}
-                  />
-                ) : (
-                  <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-lg font-semibold">
-                    {player.player_name.charAt(0)}
-                  </div>
+    <div className="vs-content">
+      {players.map((player, index) => {
+        // Scegli come mostrarlo:
+        const hasName = player.name && player.name.trim() !== "" && player.name !== player.username;
+        
+        return (
+          <div className="vs-row vs-player-row" key={player.username + index}>
+            {/* Rank */}
+            <div className="vs-item vs-rank">{index + 1}</div>
+
+            {/* Avatar + Nome e Username */}
+            <div className="vs-item vs-channel-wrapper">
+              {player.avatar_url ? (
+                <img
+                  src={player.avatar_url}
+                  alt={`${player.username} avatar`}
+                  className="vs-channel-image"
+                />
+              ) : (
+                <div className="vs-channel-placeholder">
+                  {player.username.charAt(0)}
+                </div>
+              )}
+
+              <div className="vs-channel">
+                {/* Riga superiore: se esiste un name, mostralo. Altrimenti user. */}
+                <div className="vs-channel-name">
+                  {hasName ? player.name : player.username}
+                </div>
+                {/* Riga inferiore: se esiste un name diverso, mostra @username */}
+                {hasName && (
+                  <div className="vs-channel-id">@{player.username}</div>
                 )}
-                <span className="font-semibold">{player.player_name}</span>
-              </td>
-              <td className="px-6 py-4">{player.game_type}</td>
-              <td className="px-6 py-4 text-right text-green-400 font-bold">
-                {player.best_rating?.toLocaleString()}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            </div>
+
+            {/* ...altre colonne (rating, win, loss, draw)... */}
+            <div className="vs-item vs-rating vs-item--green"> 
+              {player.last_rating ?? "-"}
+            </div>
+            <div className="vs-item vs-win">{player.win ?? 0}</div>
+            <div className="vs-item vs-loss">{player.loss ?? 0}</div>
+            <div className="vs-item vs-draw">{player.draw ?? 0}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }

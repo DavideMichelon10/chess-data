@@ -18,12 +18,12 @@ app.add_middleware(
 firestore_conn = FirestoreConnection()
 
 @app.get("/top-players/")
-def get_top_players(game_type: str, limit: int = 10):
+def get_top_players(game_type: str, category:str, limit: int = 10):
     """
     Esegue una query su Firestore e ritorna i giocatori con best_rating più alto
     in base al game_type indicato (es. 'chess_blitz', 'chess_bullet', 'chess_rapid').
     """
-    results = firestore_conn.get_top_players(game_type, limit)
+    results = firestore_conn.get_top_players(game_type, category, limit)
 
     if not results:
         return {"message": "Nessun risultato trovato per questo game_type"}
