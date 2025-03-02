@@ -1,6 +1,6 @@
-module "cloudsql" {
-  source = "./cloudsql"
-}
+# module "cloudsql" {
+#   source = "./cloudsql"
+# }
 
 terraform {
   backend "gcs" {

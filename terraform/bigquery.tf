@@ -1,18 +1,21 @@
-resource "google_bigquery_dataset" "chess_data" {
-  dataset_id    = "chess_data"
-  friendly_name = "Chess Data"
+resource "google_bigquery_dataset" "chesscom" {
+  dataset_id    = "chesscom"
+  friendly_name = "chesscom"
   description   = "Dataset per salvare le statistiche di Chess.com"
-  location      = "US"
+  location      = var.region
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
-resource "google_bigquery_table" "chess_stats" {
-  dataset_id = google_bigquery_dataset.chess_data.dataset_id
-  table_id   = "chess_stats"
-
+resource "google_bigquery_table" "players_history" {
+  dataset_id = google_bigquery_dataset.chesscom.dataset_id
+  table_id   = "players_history"
+  time_partitioning {
+    type = "DAY"
+  }
+  clustering = ["player_name"]  
   schema = <<EOF
     [
     {"name": "player_name", "type": "STRING", "mode": "NULLABLE"},
