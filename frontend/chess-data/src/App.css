@@ -7,6 +7,14 @@ body {
   font-family: Inter, sans-serif;
   overflow-y: scroll;
 }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #181818; /* o #1c1c1c, come preferisci */
+  height: 100%;
+  color: #fff; /* se vuoi testo bianco di default */
+}
 
 ::-webkit-scrollbar {
   width: 10px;
@@ -45,6 +53,8 @@ body {
 }
 
 .content {
-  flex: 1;
+  flex: 1; 
+  /* se vuoi più spazio fisso alla fine: */
+  padding-bottom: 40px; 
 }
 

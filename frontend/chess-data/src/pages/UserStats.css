@@ -1,0 +1,141 @@
+/* 📌 Contenitore principale */
+.user-profile-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* 🎴 Card Profilo */
+.user-card {
+  background: #222;
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid white;
+  border-radius: 12px; /* 🔹 Angoli arrotondati uniformi */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: none;
+  cursor: default;
+}
+
+/* 👤 Info profilo */
+.profile-top {
+  display: flex;
+  align-items: left;
+  margin-bottom: 16px;
+}
+
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* Rimane rotondo per avatar */
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.user-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.user-username {
+  font-size: 1rem;
+  color: #aaa;
+}
+
+/* 🔹 Titolo categoria (FM, GM, IM, ecc.) */
+.user-category {
+  margin-top: 5px;
+  padding: 2px 6px;
+  background: #722929;
+  color: white;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+}
+
+/* 🎮 Sezione bottoni modalità */
+.game-mode-selector {
+  display: flex;
+  gap: 10px;
+  padding-bottom: 15px;
+  width: 100%;
+}
+
+/* 🔘 Bottoni modalità */
+.game-type-button {
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid white;
+  padding: 14px;
+  border-radius: 12px; /* 🔹 Stesso arrotondamento */
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+  flex: 1; /* 🔹 Occupa tutta la larghezza disponibile */
+  text-align: center;
+}
+
+.game-type-button.active {
+  background: #3a3a3a;
+  font-weight: bold;
+}
+
+/* 📊 Statistiche */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* 🏆 Card statistiche */
+.stat-card {
+  background: #222;
+  padding: 16px;
+  border-radius: 12px; /* 🔹 Angoli uniformi */
+  border: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* 🏷️ Titolo della statistica */
+.stat-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+}
+
+/* 🔢 Valore della statistica */
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  text-align: right;
+  margin-top: 5px;
+}
+
+/* ♟️ Miglior Partita */
+.best-game {
+  text-align: center;
+  background: #222;
+  padding: 15px;
+  border-radius: 12px; /* 🔹 Anche qui stesso stile */
+  border: 1px solid white;
+}
+
+.best-game h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.best-game a {
+  color: #00cc66;
+  text-decoration: none;
+  font-weight: bold;
+}

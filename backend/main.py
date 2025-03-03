@@ -33,29 +33,21 @@ def get_top_players(game_type: str, category:str, limit: int = 10):
         "top_players": results
     }
     
-@app.get("/search/")
-def search_player(player_name: str = Query(..., title="Nome del giocatore")):
+@app.get("/search")
+def search_player(player_name: str):
     """
-    Recupera i dati di un singolo giocatore da Firestore.
-    Lo username del giocatore coincide con l'ID del documento nella collection chesscom_users.
+    Recupera i dati (tutti i campi) di un singolo giocatore da Firestore.
+    Lo username coincide con l'ID del documento.
     """
+    print("IN SEARCH")
     data = firestore_conn.get_user_data(player_name)
     if not data:
         return {"message": "Nessun risultato trovato per questo giocatore"}
 
-    # Ricostruiamo un formato di risposta simile a quello di BigQuery,
-    # ossia un array di "righe" per ogni game_type (chess_blitz, chess_bullet, chess_rapid).
-    results = []
-    for game_type in ["chess_blitz", "chess_bullet", "chess_rapid"]:
-        if game_type in data:
-            results.append({
-                "player_name": player_name,
-                "game_type": game_type,
-                "last_rating": data[game_type].get("last_rating", None),
-                "best_rating": data[game_type].get("best_rating", None),
-            })
-    
+    # Ritorniamo direttamente il doc, includendo anche lo username
     return {
-        "player_name": player_name,
-        "stats": results
+        "username": player_name,
+        "user_data": data
     }
+
+
