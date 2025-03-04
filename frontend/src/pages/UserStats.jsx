@@ -82,7 +82,7 @@ export default function UserStats() {
 
   return (
     <div className="user-profile-container">
-      <div className="user-card">
+      <div className="user-card card">
         <div className="profile-top">
           {avatarUrl && <img src={avatarUrl} alt="avatar" className="user-avatar" />}
           <div className="user-info">
@@ -106,7 +106,6 @@ export default function UserStats() {
         </div>
       </div>
 
-      {/* Resto del codice rimane invariato */}
       <div className="stats-chart-container">
         <div className="rating-column">
           <div className="stat-card">
@@ -119,13 +118,13 @@ export default function UserStats() {
           </div>
         </div>
 
-        <div className="chart-column">
+        <div className="chart-column card">
           <WinLossDrawChart win={win} loss={loss} draw={draw} />
         </div>
       </div>
 
       {best_game_url && (
-        <div className="best-game">
+        <div className="best-game card">
           <h3>Miglior Partita</h3>
           <a href={best_game_url} target="_blank" rel="noopener noreferrer">
             Guarda la partita
@@ -133,7 +132,7 @@ export default function UserStats() {
         </div>
       )}
       {
-        <div className="player-history">
+        <div className="card">
           <PlayerHistory selectedGameType={state.selectedGameType} />
         </div>}
     </div>

@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
-body {
-  background-color: #181818;
-  color: white;
-  padding: 0;
-  font-family: Inter, sans-serif;
-  overflow-y: scroll;
+:root {
+  --text-color-username: #aaa;
+  --bq-color-title: #722929;
+  --botton-color-over: #3a7070;
 }
+
 html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #181818; /* o #1c1c1c, come preferisci */
+  font-family: Inter, sans-serif;
+  background-color: #181818;
+  overflow-y: scroll;
   height: 100%;
-  color: #fff; /* se vuoi testo bianco di default */
+  color: #fff;
 }
 
 ::-webkit-scrollbar {
@@ -57,7 +58,17 @@ body {
   padding-bottom: 40px; 
 }
 
-/* shared-styles.css */
+.card {
+  background: #222;
+  margin-bottom: 16px;
+  padding: 20px;
+  border: 1px solid white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 .interactive-button {
   background: #2a2a2a;
   color: white;
@@ -75,6 +86,6 @@ body {
 }
 
 .interactive-button:hover {
-  background-color: #2C2C2C;
+  background-color: var(--botton-color-over);
   color: white;
 }

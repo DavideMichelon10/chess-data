@@ -17,12 +17,11 @@ export default function Header() {
       {/* Navbar */}
       <nav className="nav">
         <ul className="nav-list">
-          <li className="nav-list-item dropdown">
-            <Link to="/top-players">Top Players</Link>
+          <li className="nav-list-item">
+            <Link to="/top-players" className="interactive-button">Top Players</Link>
           </li>
         </ul>
       </nav>
-
       {/* Search e Login */}
       <div className="header-right">
         <button className="btn login">Log In</button>

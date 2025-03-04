@@ -51,3 +51,13 @@
   color: white;
   font-size: 18px;
 }
+#search-bar-input {
+  border: none;
+  background: transparent;
+  color: white;
+  flex-grow: 1;
+  padding: 10px;
+  font-size: 16px;
+  outline: none; /* Rimuove il bordo blu */
+  box-shadow: none; /* Rimuove eventuali effetti di focus */
+}
