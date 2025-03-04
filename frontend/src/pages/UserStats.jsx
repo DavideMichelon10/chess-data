@@ -97,7 +97,7 @@ export default function UserStats() {
           {["chess_blitz", "chess_bullet", "chess_rapid", "chess_daily"].map((type) => (
             <button
               key={type}
-              className={`game-type-button ${state.selectedGameType === type ? "active" : ""}`}
+              className={`interactive-button game-type-button ${state.selectedGameType === type ? "active" : ""}`}
               onClick={() => handleGameTypeChange(type)}
             >
               {type.replace("chess_", "").toUpperCase()}

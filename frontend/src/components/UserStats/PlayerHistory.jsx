@@ -50,37 +50,59 @@ export default function PlayerHistory({ selectedGameType }) {
 
   const isDataAvailable = historyData.length > 0;
 
-  // Dati per il grafico (vuoto se non ci sono dati)
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false, // Rimuove la legenda
+      },
+      title: {
+        display: true,
+        text: `RATING ${selectedGameType.replace("chess_", "").toUpperCase()}`,
+        align: 'start', // Allinea il titolo a sinistra
+        color: 'white', // Colore del testo del titolo
+        font: {
+          size: 16,
+          weight: 'bold'
+        },
+        padding: {
+          bottom: 20 // Aggiunge un po' di spazio sotto il titolo
+        }
+      }
+    },
+    scales: {
+      x: {
+        display: isDataAvailable,
+        grid: {
+          color: 'rgba(255,255,255,0.1)' // Colore griglia più chiaro
+        }
+      },
+      y: {
+        display: isDataAvailable,
+        grid: {
+          color: 'rgba(255,255,255,0.1)' // Colore griglia più chiaro
+        }
+      }
+    }
+  };
+
   const data = {
     labels: isDataAvailable ? historyData.map((entry) => new Date(entry.timestamp).toLocaleDateString()) : [],
     datasets: [
       {
-        label: "Rating nel tempo",
+        label: "", // Rimuove l'etichetta del dataset
         data: isDataAvailable ? historyData.map((entry) => entry.last_rating) : [],
-        borderColor: isDataAvailable ? "GREEN" : "rgba(0,0,0,0)",
+        borderColor: "#00FF00", // Verde acceso
+        backgroundColor: "rgba(0,255,0,0.2)", // Verde trasparente
+        borderWidth: 2,
+        pointBackgroundColor: "#00FF00",
+        pointBorderColor: "#00FF00",
+        pointRadius: 4,
         tension: 0.3,
       },
     ],
   };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false, // Mantiene il contenitore fisso
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: `Storico Rating di ${username} (${selectedGameType.replace("chess_", "").toUpperCase()})`,
-      },
-    },
-    scales: {
-      x: { display: isDataAvailable },
-      y: { display: isDataAvailable },
-    },
-  };
-
   return (
     <div className="player-history-container">
       <div className="date-range-buttons">
@@ -88,7 +110,7 @@ export default function PlayerHistory({ selectedGameType }) {
           <button
             key={range}
             type="button"
-            className={`date-button ${dateRange === range ? "active" : ""}`}
+            className={`interactive-button date-button ${dateRange === range ? "active" : ""}`}
             onClick={() => setDateRange(range)}
           >
             {range}
