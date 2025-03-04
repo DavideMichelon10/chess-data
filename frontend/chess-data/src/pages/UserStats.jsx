@@ -3,18 +3,16 @@ import { useParams } from "react-router-dom";
 import PlayerHistory from "../components/UserStats/PlayerHistory";
 import WinLossDrawChart from "../components/UserStats/WinLossDrawChart";
 import "./UserStats.css";
-
-// Funzione separata per la chiamata API
 const fetchUserData = async (username) => {
   try {
     const response = await fetch(
       `http://127.0.0.1:8989/search?player_name=${username}`
     );
-    
+
     if (!response.ok) {
       throw new Error('Errore nel recupero dei dati');
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error("Errore nel caricamento dell'utente:", error);
@@ -24,7 +22,8 @@ const fetchUserData = async (username) => {
 
 export default function UserStats() {
   const { username } = useParams();
-  
+
+  console.log("username")
   // Stato con struttura più esplicita
   const [state, setState] = useState({
     userData: null,
@@ -33,13 +32,12 @@ export default function UserStats() {
     selectedGameType: "chess_blitz"
   });
 
-  // Utilizzare useCallback per ottimizzare le chiamate
   const loadUserData = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true }));
-    
+
     try {
       const data = await fetchUserData(username);
-      
+
       setState(prev => ({
         ...prev,
         userData: data,
@@ -134,10 +132,10 @@ export default function UserStats() {
           </a>
         </div>
       )}
-
-      <div className="player-history">
-        <PlayerHistory selectedGameType={state.selectedGameType} />
-      </div>
+      {
+        <div className="player-history">
+          <PlayerHistory selectedGameType={state.selectedGameType} />
+        </div>}
     </div>
   );
 }

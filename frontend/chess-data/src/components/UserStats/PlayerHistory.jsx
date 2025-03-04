@@ -9,7 +9,7 @@ Chart.register(LineElement, PointElement, LinearScale, CategoryScale, Title, Too
 
 export default function PlayerHistory({ selectedGameType }) {
   const { username } = useParams();
-  const [historyData, setHistoryData] = useState(null);
+  const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState("MAX");
 
@@ -30,47 +30,42 @@ export default function PlayerHistory({ selectedGameType }) {
   useEffect(() => {
     async function fetchHistory() {
       setLoading(true);
-      setHistoryData(null);
+      setHistoryData([]);
       try {
         const startDate = calculateStartDate();
         const response = await fetch(
           `http://127.0.0.1:8989/player-history/?player_name=${username}&game_type=${selectedGameType}&start_date=${startDate}`
         );
         const data = await response.json();
-        setHistoryData(data.history);
-        setLoading(false);
+        setHistoryData(data.history || []);
       } catch (err) {
         console.error("Error loading player history:", err);
-        setHistoryData(null);
+        setHistoryData([]);
+      } finally {
         setLoading(false);
       }
     }
     fetchHistory();
   }, [username, selectedGameType, dateRange]);
 
-  const isDataAvailable = historyData && historyData.length > 0;
+  const isDataAvailable = historyData.length > 0;
 
-  // Preparazione dati per il grafico
-  const labels = isDataAvailable ? historyData.map((entry) => new Date(entry.timestamp).toLocaleDateString()) : [];
-  const ratings = isDataAvailable ? historyData.map((entry) => entry.last_rating) : [];
-
+  // Dati per il grafico (vuoto se non ci sono dati)
   const data = {
-    labels: labels,
-    datasets: isDataAvailable
-      ? [
-        {
-          label: "Rating nel tempo",
-          data: ratings,
-          borderColor: "#007bff",
-          backgroundColor: "rgba(255, 0, 183, 0.5)",
-          tension: 0.3,
-        },
-      ]
-      : [],
+    labels: isDataAvailable ? historyData.map((entry) => new Date(entry.timestamp).toLocaleDateString()) : [],
+    datasets: [
+      {
+        label: "Rating nel tempo",
+        data: isDataAvailable ? historyData.map((entry) => entry.last_rating) : [],
+        borderColor: isDataAvailable ? "GREEN" : "rgba(0,0,0,0)",
+        tension: 0.3,
+      },
+    ],
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Mantiene il contenitore fisso
     plugins: {
       legend: {
         position: "top",
@@ -80,6 +75,10 @@ export default function PlayerHistory({ selectedGameType }) {
         text: `Storico Rating di ${username} (${selectedGameType.replace("chess_", "").toUpperCase()})`,
       },
     },
+    scales: {
+      x: { display: isDataAvailable },
+      y: { display: isDataAvailable },
+    },
   };
 
   return (
@@ -88,7 +87,7 @@ export default function PlayerHistory({ selectedGameType }) {
         {["MAX", "1D", "2D", "7D", "3M"].map((range) => (
           <button
             key={range}
-            type="button"  // Aggiunto per evitare refresh della pagina
+            type="button"
             className={`date-button ${dateRange === range ? "active" : ""}`}
             onClick={() => setDateRange(range)}
           >
@@ -96,13 +95,17 @@ export default function PlayerHistory({ selectedGameType }) {
           </button>
         ))}
       </div>
-      {loading ? (
-        <div className="loading-message">Caricamento dati...</div>
-      ) : isDataAvailable ? (
-        <Line data={data} options={options} />
-      ) : (
-        <div className="error-message">No data found.</div>
-      )}
+
+      {/* Contenitore fisso per mantenere la dimensione */}
+      <div className="chart-container-graph">
+        {loading ? (
+          <div className="loading-message">Caricamento dati...</div>
+        ) : isDataAvailable ? (
+          <Line data={data} options={options} />
+        ) : (
+          <div className="error-message">Nessun dato disponibile</div>
+        )}
+      </div>
     </div>
   );
 }
