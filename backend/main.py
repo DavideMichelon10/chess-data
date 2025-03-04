@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-
-# Importa la nuova classe di connessione
+from bigquery_connection import BigQueryConnection
 from firestore_connection import FirestoreConnection
 
 app = FastAPI()
@@ -50,4 +49,42 @@ def search_player(player_name: str):
         "user_data": data
     }
 
-
+@app.get("/player-history/")
+def get_player_history(
+    player_name: str, 
+    game_type: str, 
+    start_date: str = "2025-03-01"
+):
+    """
+    Recupera lo storico di un giocatore per un determinato game_type
+    a partire da una data specificata (default: 1° marzo 2025).
+    """
+    bq_conn = BigQueryConnection()
+    sql = """
+        SELECT player_name, game_type, last_rating, best_rating, 
+               best_game_url, win, loss, draw, timestamp
+        FROM `chess-data-451709.chesscom.players_history`
+        WHERE player_name = @player_name
+        AND game_type = @game_type
+        AND timestamp >= TIMESTAMP(@start_date)
+        ORDER BY timestamp ASC
+    """
+    
+    params = {
+        "player_name": player_name,
+        "game_type": game_type,
+        "start_date": start_date
+    }
+    
+    print(f"query_ {sql}")
+    print(f"params: {params}")
+    results = bq_conn.execute_query(sql, params)
+    
+    if not results:
+        return {"message": "Nessun risultato trovato per questo giocatore"}
+    
+    return {
+        "player_name": player_name,
+        "game_type": game_type,
+        "history": results
+    }

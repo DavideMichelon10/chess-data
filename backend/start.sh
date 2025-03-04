@@ -7,4 +7,4 @@ set -e
 # source venv/bin/activate  # Rimuovi il commento se usi un virtualenv
 
 # Avvia FastAPI con Uvicorn
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn main:app --host 0.0.0.0 --port 8989 --reload

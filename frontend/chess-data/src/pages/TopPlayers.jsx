@@ -23,7 +23,7 @@ export default function TopPlayers() {
   async function fetchTopPlayers(gameType, category) {
     try {
       // Se la categoria è sempre selezionata, non c'è bisogno di un controllo "if"
-      const url = `http://127.0.0.1:8000/top-players/?game_type=${gameType}&category=${category}&limit=100`;
+      const url = `http://127.0.0.1:8989/top-players/?game_type=${gameType}&category=${category}&limit=100`;
       const response = await fetch(url);
       const data = await response.json();
 
