@@ -1,7 +1,19 @@
-from fastapi import FastAPI, HTTPException, Query
+from pathlib import Path
+import sys
+
+current_dir = Path(__file__).resolve().parent
+
+# Risali alla directory root del progetto
+project_root = current_dir.parent
+print(f"project_root: {project_root}")
+
+sys.path.append(str(project_root))
+
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
-from bigquery_connection import BigQueryConnection
-from firestore_connection import FirestoreConnection
+from backend.bigquery_connection import BigQueryConnection
+from backend.firestore_connection import FirestoreConnection
+from pipelines.fetch_chess_data.fetch_chess_data import ChessDataCollector
 
 app = FastAPI()
 
@@ -33,20 +45,57 @@ def get_top_players(game_type: str, category:str, limit: int = 10):
     }
     
 @app.get("/search")
-def search_player(player_name: str):
+def search_player(player_name: str, response: Response):
     """
-    Recupera i dati (tutti i campi) di un singolo giocatore da Firestore.
-    Lo username coincide con l'ID del documento.
+    Cerca i dati di un giocatore in Firestore. Se non esiste, verifica se è presente su Chess.com.
+    Se è su Chess.com, salva i dati in Firestore e restituiscili.
+    Se non esiste né in Firestore né su Chess.com, restituisce un messaggio di errore.
     """
-    print("IN SEARCH")
-    data = firestore_conn.get_user_data(player_name)
-    if not data:
-        return {"message": "Nessun risultato trovato per questo giocatore"}
+    collector = ChessDataCollector()
 
-    # Ritorniamo direttamente il doc, includendo anche lo username
+    # 1. Controlla in Firestore
+    data = firestore_conn.get_user_data(player_name)
+    if data:
+        return {
+            "username": player_name,
+            "user_data": data
+        }
+    
+    # 2. Se non esiste in Firestore, cerca su Chess.com
+    status_code, profile = collector.get_player_profile(player_name)
+    
+
+    if status_code == 404:
+        response.status_code = 404
+        return {"message": f"Il giocatore '{player_name}' non è stato trovato su Chess.com"}
+
+    if status_code != 200:
+        response.status_code = status_code  # Altro errore HTTP ricevuto da Chess.com
+        return {"message": f"Errore nel recupero del profilo per '{player_name}' (HTTP {status_code})"}
+
+    # 3. L'utente esiste su Chess.com: recupera avatar e statistiche
+    stats_data = collector.get_player_stats(player_name) or {}
+    avatar_url = profile.get("avatar")
+    stored_avatar_url = None
+
+    if avatar_url:
+        stored_avatar_url = collector.download_and_store_avatar(avatar_url, player_name)
+    
+    collector.save_to_firestore(
+        player_name=player_name,
+        stats_data=stats_data,
+        profile_data=profile,
+        stored_avatar_url=stored_avatar_url,
+        category=profile.get("title", None)
+    )
+    
+    # 5. Recupera i dati aggiornati da Firestore
+    new_data = firestore_conn.get_user_data(player_name)
+    
+    response.status_code = 201
     return {
         "username": player_name,
-        "user_data": data
+        "user_data": new_data
     }
 
 @app.get("/player-history/")

@@ -116,21 +116,20 @@ export default function UserStats() {
             <span className="stat-title">Best Rating</span>
             <span className="stat-value">{best_rating || "-"}</span>
           </div>
+          {best_game_url &&
+            <div className="stat-card">
+              <span className="stat-title">Best Game</span>
+              <a href={best_game_url} target="_blank" rel="noopener noreferrer">
+                Guarda la partita
+              </a>
+            </div>
+          }
         </div>
 
         <div className="chart-column card">
           <WinLossDrawChart win={win} loss={loss} draw={draw} />
         </div>
       </div>
-
-      {best_game_url && (
-        <div className="best-game card">
-          <h3>Miglior Partita</h3>
-          <a href={best_game_url} target="_blank" rel="noopener noreferrer">
-            Guarda la partita
-          </a>
-        </div>
-      )}
       {
         <div className="card">
           <PlayerHistory selectedGameType={state.selectedGameType} />

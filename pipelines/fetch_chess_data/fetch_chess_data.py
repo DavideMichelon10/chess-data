@@ -4,13 +4,11 @@ import time
 import os
 import hashlib
 import urllib.parse
-import logging
 from functools import lru_cache
-from typing import Dict, List, Optional, Any, Union
 from google.cloud import firestore
 from google.cloud import storage
 from google.cloud import logging as cloud_logging
-
+from typing import Optional, Dict, Any, Tuple, List
 # Configurazione
 PROJECT = "chess-data-451709"
 BUCKET_NAME = f"{PROJECT}-chesscom-avatars"
@@ -72,36 +70,35 @@ class ChessDataCollector:
             logger.log_text(f"Errore nel recupero della lista per {category}: {str(e)}", severity="ERROR")
             return []
     
-    def get_player_profile(self, username: str) -> Optional[Dict[str, Any]]:
+    def get_player_profile(self, username: str) -> Tuple[int, Optional[Dict[str, Any]]]:
         """
-        Recupera il profilo del giocatore.
-        
-        Args:
-            username: Username del giocatore
-            
-        Returns:
-            Dizionario con i dati del profilo o None in caso di errore
+        Recupera il profilo del giocatore da Chess.com.
+        Restituisce una tupla (status_code, dati).
+        Se il giocatore non esiste (404), restituisce (404, None).
         """
         url = f"{CHESS_API_BASE}/player/{username}"
+        
         try:
             response = requests.get(url, headers=HEADERS, timeout=10)
-            response.raise_for_status()
-            return response.json()
+            status_code = response.status_code  # Salviamo lo status code
+
+            if status_code == 200:
+                return status_code, response.json()  # Restituisce (200, profilo JSON)
+
+            # Log per gli altri status code
+            if status_code == 404:
+                logger.log_text(f"Utente '{username}' non trovato su Chess.com (404)", severity="WARNING")
+            else:
+                logger.log_text(f"Errore HTTP {status_code} per {username}: {response.text}", severity="ERROR")
             
+            return status_code, None  # Restituisce (status_code, None) in caso di errore
+
         except requests.exceptions.RequestException as e:
             logger.log_text(f"Errore nel recupero del profilo per {username}: {str(e)}", severity="ERROR")
-            return None
+            return 500, None
     
     def get_player_stats(self, username: str) -> Optional[Dict[str, Any]]:
-        """
-        Recupera le statistiche del giocatore.
-        
-        Args:
-            username: Username del giocatore
-            
-        Returns:
-            Dizionario con le statistiche o None in caso di errore
-        """
+
         url = f"{CHESS_API_BASE}/player/{username}/stats"
         try:
             response = requests.get(url, headers=HEADERS, timeout=10)
