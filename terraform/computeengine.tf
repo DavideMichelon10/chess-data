@@ -22,6 +22,12 @@ resource "google_storage_bucket_object" "fetch_chess_data" {
   source = "../pipelines/fetch_chess_data/fetch_chess_data.py"
 }
 
+resource "google_storage_bucket_object" "chess_data_collector" {
+  name   = "chess_data_collector.py"
+  bucket = google_storage_bucket.script_bucket.name
+  source = "../pipelines/fetch_chess_data/chess_data_collector.py"
+}
+
 resource "google_storage_bucket_object" "copy_firestore_to_bigquery" {
   name   = "copy_firestore_to_bigquery.py"
   bucket = google_storage_bucket.script_bucket.name
@@ -107,7 +113,7 @@ resource "google_compute_instance" "chess_vm" {
   zone         = "${var.region}-a"
 
   # Disabilitare la VM all'inizio, sarà avviata dallo scheduler
-  desired_status = "TERMINATED"
+  desired_status = "RUNNING"
 
   boot_disk {
     initialize_params {
@@ -153,6 +159,7 @@ resource "google_compute_instance" "chess_vm" {
 
 
   gsutil cp gs://$BUCKET_NAME/fetch_chess_data.py /tmp/fetch_chess_data.py
+  gsutil cp gs://$BUCKET_NAME/chess_data_collector.py /tmp/chess_data_collector.py
   python3 /tmp/fetch_chess_data.py
   gsutil cp gs://$BUCKET_NAME/copy_firestore_to_bigquery.py /tmp/copy_firestore_to_bigquery.py
   python3 /tmp/copy_firestore_to_bigquery.py
@@ -162,7 +169,7 @@ resource "google_compute_instance" "chess_vm" {
   sync
 
   # Spegni la VM dopo l'esecuzione
-  shutdown -h now
+  # shutdown -h now
   EOT
 
   lifecycle {

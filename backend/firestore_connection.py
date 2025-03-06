@@ -23,16 +23,16 @@ class FirestoreConnection:
             return doc.to_dict()
         return None
 
-    def get_top_players(self, game_type: str, category: str = None, limit: int = 100):
+    def get_top_players(self, game_type: str, title: str = None, limit: int = 100):
         """
         Esegue una query su Firestore e ritorna i top player (ordinati per actual_rating 
-        decrescente) per un certo game_type, filtrando eventualmente anche su category.
+        decrescente) per un certo game_type, filtrando eventualmente anche su title.
         """
         # Costruisci la query di base
         query = self.db.collection("chesscom_users")
 
-        if category:
-            query = query.where("category", "==", category)
+        if title:
+            query = query.where("title", "==", title)
 
         query = query.order_by(f"{game_type}.last_rating", direction=firestore.Query.DESCENDING)
 

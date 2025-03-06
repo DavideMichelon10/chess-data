@@ -36,6 +36,7 @@ export default function UserStats() {
     setState(prev => ({ ...prev, loading: true }));
 
     try {
+      console.log("fetdhin")
       const data = await fetchUserData(username);
 
       setState(prev => ({
@@ -74,7 +75,7 @@ export default function UserStats() {
   const avatarUrl = user_data.avatar_storage_url
     ? user_data.avatar_storage_url.replace("gs://", "https://storage.googleapis.com/")
     : null;
-  const category = user_data.category || "-";
+  const title = user_data.title || "-";
 
   // Dati della modalità selezionata
   const gameData = user_data[state.selectedGameType] || {};
@@ -88,7 +89,7 @@ export default function UserStats() {
           <div className="user-info">
             <h1 className="user-name">{displayName}</h1>
             <p className="user-username">@{fetchedUsername}</p>
-            <span className="user-category">{category}</span>
+            <span className="user-category">{title}</span>
           </div>
         </div>
 

@@ -13,7 +13,7 @@ from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from backend.bigquery_connection import BigQueryConnection
 from backend.firestore_connection import FirestoreConnection
-from pipelines.fetch_chess_data.fetch_chess_data import ChessDataCollector
+from pipelines.fetch_chess_data.chess_data_collector import ChessDataCollector
 
 app = FastAPI()
 
@@ -27,6 +27,9 @@ app.add_middleware(
 
 # Inizializza una sola volta la connessione Firestore (opzionale ma consigliato)
 firestore_conn = FirestoreConnection()
+
+# Passa la connessione Firestore a ChessDataCollector
+chess_collector = ChessDataCollector(firestore_conn)
 
 @app.get("/top-players/")
 def get_top_players(game_type: str, category:str, limit: int = 10):
@@ -51,8 +54,7 @@ def search_player(player_name: str, response: Response):
     Se è su Chess.com, salva i dati in Firestore e restituiscili.
     Se non esiste né in Firestore né su Chess.com, restituisce un messaggio di errore.
     """
-    collector = ChessDataCollector()
-
+    print(f"asdasd")
     # 1. Controlla in Firestore
     data = firestore_conn.get_user_data(player_name)
     if data:
@@ -62,7 +64,7 @@ def search_player(player_name: str, response: Response):
         }
     
     # 2. Se non esiste in Firestore, cerca su Chess.com
-    status_code, profile = collector.get_player_profile(player_name)
+    status_code, profile = chess_collector.get_player_profile(player_name)
     
 
     if status_code == 404:
@@ -74,19 +76,18 @@ def search_player(player_name: str, response: Response):
         return {"message": f"Errore nel recupero del profilo per '{player_name}' (HTTP {status_code})"}
 
     # 3. L'utente esiste su Chess.com: recupera avatar e statistiche
-    stats_data = collector.get_player_stats(player_name) or {}
+    stats_data = chess_collector.get_player_stats(player_name) or {}
     avatar_url = profile.get("avatar")
     stored_avatar_url = None
 
     if avatar_url:
-        stored_avatar_url = collector.download_and_store_avatar(avatar_url, player_name)
+        stored_avatar_url = chess_collector.download_and_store_avatar(avatar_url, player_name)
     
-    collector.save_to_firestore(
+    chess_collector.save_to_firestore(
         player_name=player_name,
         stats_data=stats_data,
         profile_data=profile,
-        stored_avatar_url=stored_avatar_url,
-        category=profile.get("title", None)
+        stored_avatar_url=stored_avatar_url
     )
     
     # 5. Recupera i dati aggiornati da Firestore
