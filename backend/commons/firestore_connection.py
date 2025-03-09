@@ -2,12 +2,14 @@
 
 import firebase_admin
 from firebase_admin import credentials, firestore
-
+import os
 class FirestoreConnection:
     def __init__(self):
-        # Inizializza l'app Firebase se non è già stata inizializzata
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Ottiene la directory del file corrente
+        CREDENTIALS_PATH = os.path.join(BASE_DIR,  "be_credentials.json")
+
         if not firebase_admin._apps:
-            cred = credentials.Certificate('/Users/davide.michelon/personal_projects/chess-data/backend/firestore_credentials.json')
+            cred = credentials.Certificate(CREDENTIALS_PATH)
             firebase_admin.initialize_app(cred)
         self.db = firestore.client()
 

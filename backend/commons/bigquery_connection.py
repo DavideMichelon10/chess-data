@@ -1,10 +1,14 @@
 from google.cloud import bigquery
 from google.oauth2 import service_account
 import json
+import os
 
 class BigQueryConnection():
     def __init__(self):
-        with open('/Users/davide.michelon/personal_projects/chess-data/backend/bq_credentials.json', 'r') as json_file:
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Ottiene la directory del file corrente
+        CREDENTIALS_PATH = os.path.join(BASE_DIR,  "be_credentials.json")
+
+        with open(CREDENTIALS_PATH, 'r') as json_file:
             service_account_info = json.load(json_file)
         self.credentials = service_account.Credentials.from_service_account_info(
             service_account_info,

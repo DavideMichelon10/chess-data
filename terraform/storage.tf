@@ -70,3 +70,31 @@ resource "google_project_iam_binding" "chess_vm_storage_admin" {
     "serviceAccount:${google_service_account.chess_sa.email}"
   ]
 }
+
+
+variable "bucket_upload_data" {
+  description = "Bucket per il salvataggio dei dati delle partite di Chess.com"
+  type        = string
+  default     = "chesscom-games-data"
+}
+
+resource "google_storage_bucket" "upload_data" {
+  name          = var.bucket_upload_data
+  location      = var.region
+  storage_class = "STANDARD"
+
+  versioning {
+    enabled = true  # Abilita il versioning per evitare perdite accidentali di dati
+  }
+
+  lifecycle_rule {
+    condition {
+      age = 7  # Mantieni i file per almeno 7 giorni
+    }
+    action {
+      type = "Delete"
+    }
+  }
+
+  uniform_bucket_level_access = true  # Blocca accesso pubblico
+}

@@ -1,0 +1,56 @@
+.win-loss-draw-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .chart-title {
+    font-size: 14px;
+    margin-bottom: 16px;
+    color: #ccc;
+  }
+  
+  .chart-content {
+    display: flex;
+    flex-direction: row;  /* Legenda a sinistra, grafico a destra */
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    flex: 1;
+  }
+  
+  
+  .chart-legend {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+    min-width: 120px;
+    padding-right: 20px;  /* Distanza tra legenda e grafico */
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+  .legend-text {
+    flex: 1;
+    font-size: 12px;
+    color: #aaa;
+  }
+  
+  .legend-value {
+    font-weight: bold;
+    font-size: 14px;
+  }

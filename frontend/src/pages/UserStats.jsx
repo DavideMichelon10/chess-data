@@ -75,12 +75,12 @@ export default function UserStats() {
   const avatarUrl = user_data.avatar_storage_url
     ? user_data.avatar_storage_url.replace("gs://", "https://storage.googleapis.com/")
     : null;
-  const title = user_data.title || "-";
+  const title = user_data.title;
 
   // Dati della modalità selezionata
   const gameData = user_data[state.selectedGameType] || {};
   const { last_rating, best_rating, win, loss, draw, best_game_url } = gameData;
-
+  console.log("title:" + title);
   return (
     <div className="user-profile-container">
       <div className="user-card card">
@@ -89,8 +89,8 @@ export default function UserStats() {
           <div className="user-info">
             <h1 className="user-name">{displayName}</h1>
             <p className="user-username">@{fetchedUsername}</p>
-            <span className="user-category">{title}</span>
-          </div>
+            {title && <span className="user-category">{title}</span>}
+            </div>
         </div>
 
         {/* Selettore modalità di gioco */}

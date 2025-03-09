@@ -25,10 +25,7 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],  
 )
 
-# Inizializza una sola volta la connessione Firestore (opzionale ma consigliato)
 firestore_conn = FirestoreConnection()
-
-# Passa la connessione Firestore a ChessDataCollector
 chess_collector = ChessDataCollector(firestore_conn)
 
 @app.get("/top-players/")
